@@ -4,3 +4,5 @@ docker changes on teting_branch
 
 incorrect code
 added new docker command
+
+added docker instruction for deployment
