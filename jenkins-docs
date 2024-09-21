@@ -1,0 +1,50 @@
+vi Jenkinsfile
+
+pipeline
+{
+agent any
+stages
+{
+stage('print your message')
+ {steps { sh 'echo hello'  }}       //sh=execute shell
+
+}
+}
+
+
+==========how to print two message
+option1: seperate stages
+
+
+pipeline
+{
+agent any
+stages
+{
+stage('print 1st message')       //stage1
+ {steps { sh 'echo hello'  }}    //sh=execute shell
+
+stage('print 2nd message')       //stage2
+ {steps { sh 'echo bye'  }}    //sh=execute shell
+
+}
+}
+
+
+options2: multiple sh or many commands can be executed in a single stage
+
+pipeline
+{
+agent any
+stages
+{
+stage('print both the message')       //stage1
+ {steps { sh 'echo hello'  
+          sh 'echo bye'}}        //sh=execute shell
+
+}
+}
+
+
+
+
