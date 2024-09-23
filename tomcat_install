@@ -1,0 +1,8 @@
+sudo yum install -y java-1.8.0
+sudo yum install -y tomcat
+sudo systemctl start tomcat
+sudo systemctl status tomcat
+sudo systemctl enable tomcat                         	
+sudo yum install -y tomcat-webapps tomcat-admin-webapps tomcat-docs-webapp tomcat-javadoc
+cd /usr/share/tomcat/webapps
+sudo chmod 777 /usr/share/tomcat/webapps/
