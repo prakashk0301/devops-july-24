@@ -1,5 +1,5 @@
-create an instance (t2.micro) & install tomcat for CICD
-=======================================================
+create an instance (t2.micro), tomcat works on port 8080. install tomcat for CICD
+================================================================================
 
 sudo yum install -y java-1.8.0
 sudo yum install -y tomcat
