@@ -1,3 +1,6 @@
+create an instance (t2.micro) & install tomcat for CICD
+=======================================================
+
 sudo yum install -y java-1.8.0
 sudo yum install -y tomcat
 sudo systemctl start tomcat
