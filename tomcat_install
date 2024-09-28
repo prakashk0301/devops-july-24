@@ -9,3 +9,14 @@ sudo systemctl enable tomcat
 sudo yum install -y tomcat-webapps tomcat-admin-webapps tomcat-docs-webapp tomcat-javadoc
 cd /usr/share/tomcat/webapps
 sudo chmod 777 /usr/share/tomcat/webapps/
+
+
+=================================
+how to access tomcat from browser:
+http://<public IP of tomcat instance>:8080
+
+================================
+After deployment(CICD)
+http://<public IP of tomcat instance>:8080/<artifact name>
+
+ex: http://<public IP of tomcat instance>:8080/webapp
