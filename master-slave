@@ -31,3 +31,27 @@ step 3: set port for agent communication
 manage jenkins -> security -> Agents -> TCP port for inbound agents -> fixed -> 25000    (any free port number)
 
 step 4: open same port in SG of both jenkins and slave
+
+step 5: Configure Master Slave
+manage jenkins-> nodes -> add node
+
+step 6: download agent.jar on slave
+sudo curl -sO http://18.141.175.255:8080/jnlpJars/agent.jar
+
+step 7: create a file on slave
+vi agent.sh   copy the script from jenkins dashboad and add space then "&" at last. 
+
+java -jar agent.jar -url http://18.141.175.255:8080/ -secret d0d89ba16bfc3adaee6468edabb48c7aa591bcf0a37f2e26ec31ef421c66c2e0 -name "slave-1" -workDir "/home/ec2-user" &
+
+
+& -> to run the processes in background
+
+
+
+
+
+
+
+
+
+
