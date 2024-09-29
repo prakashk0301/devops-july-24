@@ -20,10 +20,10 @@ mvn --version
 ***install respective build tools
 
 Source code type     Respective build tool
-Java                :   Maven, ant, gradle
-dotnet              :  MSbuild
-Nodejs, JavaScript  : nodejs
-python              : python
-npm                 : npm,nvm
+Java                :  Maven, ant, gradle
+dotnet              :  MSbuild, dotnet
+Nodejs, JavaScript  :  nodejs
+python              :  python
+npm                 :  npm,nvm
 
 
