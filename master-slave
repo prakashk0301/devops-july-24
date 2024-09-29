@@ -1,0 +1,17 @@
+**Step 1.  Launch an instance (Amazon Linux 2 AMI) , Access Instance terminal and install and setup java environment **
+
+open port number in SG :80, 8080, 22, 443, and set source as 0.0.0.0/0  or all traffic
+
+sudo yum update -y
+sudo yum install -y git aws-cli
+sudo yum install java-17-amazon-corretto-devel
+sudo alternatives --config java
+
+(In this command point to the latest/or required java version by selection)
+
+**Step 2. Install Maven: Add the apache maven repository to the yum repos, and install apache from there**
+
+sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+sudo yum install -y apache-maven
+mvn --version
