@@ -2,8 +2,8 @@ there are 2 modes:
 
 1. foreground mode:
 
-docker run -i -t --name c5 <image name> /bin/bash
-ex: docker run -i -t --name c5 
+docker run -i -t --name c4 <image name> /bin/bash
+ex: docker run -i -t --name c4 
 
 
 
