@@ -1,0 +1,42 @@
+there are 2 modes:
+
+1. foreground mode:
+
+docker run -i -t --name c5 <image name> /bin/bash
+ex: docker run -i -t --name c5 
+
+
+
+2. detached mode:
+
+
+
+infra container: script execution, process file or data, backend operation etc
+with /bin/bash
+
+ex: 
+
+
+
+ui container: app deployment, dashboard
+without /bin/bash  & port mapping(port forwarding): -p <VM port>:<app port>
+
+ex: docker run -it -p 20000:8080 --name c5 tomcat:latest
+
+how to access: http://localhost:20000
+
+
+
+***VM port should be unique, it should not assing to any other processes or container
+*** container name should be unique
+***container cant be access directly, container presence is within the docker host VM
+
+
+how to run another container(jenkins) where app port is 8080
+docker run -it -p 20001:8080 --name c6 jenkins:latest
+
+
+how to create apache container (App port 80 )
+docker run -it -p 20002:80 --name c7 httpd:latest
+
+
