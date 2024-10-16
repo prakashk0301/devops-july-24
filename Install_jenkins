@@ -4,7 +4,7 @@ open port number in SG :80, 8080, 22, 443, and set source as 0.0.0.0/0  or all t
 
 sudo yum update -y
 sudo yum install -y git aws-cli
-sudo yum install java-17-amazon-corretto-devel
+sudo yum install java-17-amazon-corretto-devel -y
 sudo alternatives --config java
 
 (In this command point to the latest/or required java version by selection)
