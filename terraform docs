@@ -97,8 +97,8 @@ Q. How can we check the output before creation the resources?
 ans:  
 terraform plan:   Show changes required by the current configuration
 
-***we can generate the output of plan command & send it approval
-
+***we can generate the output of plan command & send it for approval
+terraform plan -out abc.json
 
 
 
