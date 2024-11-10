@@ -42,7 +42,7 @@ All other commands:
 
 create access key & secret key in aws (iam-user-terraform)
 
-configure access key & secret key locally, open gitbash/powershell/cmd and type aws configure and provide acess key secret key
+configure access key & secret key locally, open gitbash/powershell/cmd and type "aws configure" and provide "acess key" "secret key" and "region id"
 
 
 -----------How to create(provision) resources in aws
