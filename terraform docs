@@ -104,4 +104,4 @@ terraform plan -out abc.json
 terraform apply      ------> create/modify resources from tf code
 
 
-
+Assignment: change ecr repo name from "devops-ecr" to "my-ecr"
