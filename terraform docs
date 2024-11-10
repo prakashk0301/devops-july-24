@@ -89,3 +89,16 @@ image_tag_mutability  --> optional
 
 terraform validate         ---> just validate the file
 
+
+Q. why terraform is famous?
+Q. Diff between terraform and other provisioning tool(cloudformation/ansible/azure arm template/chef/puppet etc)??
+Q. How can we check the output before creation the resources?
+
+ans:  
+terraform plan:   Show changes required by the current configuration
+
+***we can generate the output of plan command & send it approval
+
+
+
+
