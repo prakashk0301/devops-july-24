@@ -105,3 +105,30 @@ terraform apply      ------> create/modify resources from tf code
 
 
 Assignment: change ecr repo name from "devops-ecr" to "my-ecr"
+
+
+
+Q. What do you understand by tfstate file?
+ans:  where you execute apply command, terraform creates tftate in the background. 
+A Terraform state file, or terraform.tfstate, is a JSON file that stores current information about the resource created
+
+
+Q. What do you understand by tfstate.backup file?
+The tfstate.backup file is a backup of the Terraform state file that's created when you modify the code and apply it. 
+The tfstate file is a JSON file that tracks the state of resources managed by Terraform,
+including their dependencies, configuration, and metadata. 
+The tfstate.backup file is a temporary solution that helps ensure the reliability of the infrastructure management process. 
+It's created to help users recover a previous state if they accidentally make an undesirable change, such as losing the record of a resource
+
+
+Q. Where do you store tfstate file and tfstate.backup?
+ans:  s3 bucket ( you can enable versioning) or github 
+
+
+Q. why we need to store tfstate.backuop?
+or
+Q. Can we rollback the changes in terraform?
+ans: yes, we can refer tfstate.backup for rollback activity
+
+
+
