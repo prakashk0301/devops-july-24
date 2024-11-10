@@ -38,3 +38,8 @@ All other commands:
   version       Show the current Terraform version
   workspace     Workspace management
 
+
+
+create access key & secret key in aws (iam-user-terraform)
+
+configure access key & secret key locally, open gitbash/powershell/cmd and type aws configure and provide acess key secret key
