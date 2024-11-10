@@ -68,4 +68,6 @@ provider "aws" {
 
 
 google -> terraform aws <resource name> resource  -> ex: terraform aws ecr resource
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository
+
 
