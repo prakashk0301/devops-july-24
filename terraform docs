@@ -125,10 +125,12 @@ Q. Where do you store tfstate file and tfstate.backup?
 ans:  s3 bucket ( you can enable versioning) or github 
 
 
-Q. why we need to store tfstate.backuop?
+Q. why we need to store tfstate.backup?
 or
 Q. Can we rollback the changes in terraform?
 ans: yes, we can refer tfstate.backup for rollback activity
 
 
+
+terraform destroy    --> use wisely, it deletes the created resources.
 
