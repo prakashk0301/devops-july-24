@@ -3,3 +3,9 @@ https://developer.hashicorp.com/terraform/install
 
 create a terraform folder in the C drive then download the terraform tool and extract it here: C:\terraform
 
+
+set the env variable: start button -> edit the system env variable -> environment variable -> click on path under system env variable -> New
+and type C:\terraform
+
+
+open powershell/cmd/gitbash and type terraform
