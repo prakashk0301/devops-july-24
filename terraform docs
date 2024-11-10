@@ -150,10 +150,23 @@ resource "aws_s3_bucket" "s3name" {
 
 
 terraform validate
+how to create specific resources (if there is more than one tf file in the current directory)
+
 syntx:  terraform plan --target=<resource>.<resourceID>
 ex:     terraform plan --target=aws_s3_bucket.s3name
 
+terraform apply --target=aws_s3_bucket.s3name
 
+
+
+
+
+Assignment: 
+1. create Ec2, EKS resource, Create RDS resource, Create Security group (inbound and outbound), Create ELB
+2. Create S3 Module in terraform
+
+
+====Have you ever created any module in terraform
 
 
 
