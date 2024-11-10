@@ -134,3 +134,29 @@ ans: yes, we can refer tfstate.backup for rollback activity
 
 terraform destroy    --> use wisely, it deletes the created resources.
 
+
+===========Create s3 bucket (aws_s3_bucket)
+vi s3.tf
+
+resource "aws_s3_bucket" "s3name" {
+  bucket = "devops-pune-kumar"
+
+  tags = {
+    Name        = "devops-pune-kumar"
+    Environment = "Dev"
+  }
+}
+
+
+
+terraform validate
+syntx:  terraform plan --target=<resource>.<resourceID>
+ex:     terraform plan --target=aws_s3_bucket.s3name
+
+
+
+
+
+
+
+
