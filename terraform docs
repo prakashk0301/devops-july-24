@@ -101,4 +101,7 @@ terraform plan:   Show changes required by the current configuration
 terraform plan -out abc.json
 
 
+terraform apply      ------> create/modify resources from tf code
+
+
 
