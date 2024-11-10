@@ -67,5 +67,5 @@ provider "aws" {
 
 
 
-
+google -> terraform aws <resource name> resource  -> ex: terraform aws ecr resource
 
