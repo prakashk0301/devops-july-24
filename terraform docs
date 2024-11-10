@@ -71,3 +71,21 @@ google -> terraform aws <resource name> resource  -> ex: terraform aws ecr resou
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository
 
 
+vi main.tf            (extension should be .tf only)
+
+resource "aws_ecr_repository" "ecr-resource" {
+  name                 = "devops-ecr"
+  image_tag_mutability = "MUTABLE"
+
+}
+
+
+where:  
+aws_ecr_repository    --> preconfigured resource 
+ecr-resource          --> resource type
+name:                 --> name of the ECR (required category)
+image_tag_mutability  --> optional
+
+
+terraform validate         ---> just validate the file
+
