@@ -43,3 +43,29 @@ All other commands:
 create access key & secret key in aws (iam-user-terraform)
 
 configure access key & secret key locally, open gitbash/powershell/cmd and type aws configure and provide acess key secret key
+
+
+-----------How to create(provision) resources in aws
+google "terraform proider" -> https://registry.terraform.io/browse/providers --> select AWS -> copy Use provider content
+
+C:/terraform
+
+vi provider.tf
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.75.0"
+    }
+  }
+}
+
+provider "aws" {
+  # Configuration options
+}
+
+
+
+
+
