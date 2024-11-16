@@ -166,8 +166,13 @@ Assignment:
 2. Create S3 Module in terraform
 
 
-====Have you ever created any module in terraform
+Module: so that we can re-use the function or terraform code.
 
+====Have you ever created any module in terraform
+module sample ref: 
+https://github.com/iam-veeramalla/terraform-zero-to-hero
+https://github.com/DontShaveTheYak/terraform-module-template
+https://github.com/futurice/terraform-examples
 
 
 
