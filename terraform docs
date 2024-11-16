@@ -160,6 +160,46 @@ terraform apply --target=aws_s3_bucket.s3name
 
 
 
+===============variable in terraform
+
+vi var.tf
+
+
+variable "s3_bucket" {
+    description = "value for the bucket"
+    default     = "devops-pune-kumar"
+}
+
+variable "my_ami" {
+  description = "ami ID from AWS"
+  default     = "id-134556"
+}
+
+variable "instance_type" {
+  description = "instance type from AWS"
+  default     = "t2.medium"
+}
+
+where s3_bucket is the variable name, you can provide any name to this variable, and provide actual value under default
+
+
+
+how to call variable in mail.tf file
+
+vi s3.tf
+
+resource "aws_s3_bucket" "s3name" {
+  bucket = "$var.s3_bucket"
+
+  tags = {
+    Name        = "devops-pune-kumar"
+    Environment = "Dev"
+  }
+}
+
+
+
+
 
 Assignment: 
 1. create Ec2, EKS resource, Create RDS resource, Create Security group (inbound and outbound), Create ELB
