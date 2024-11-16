@@ -215,6 +215,56 @@ https://github.com/DontShaveTheYak/terraform-module-template
 https://github.com/futurice/terraform-examples
 
 
+create a folder "module"
+cd module
+create a folder for module "ec2_instance"
+cd ec2_instance
+vi main.tf
+
+resource "aws_instance" "example" {
+    ami = var.ami_value
+    instance_type = var.instance_type_value
+    subnet_id = var.subnet_id_value
+}
+
+
+vi variable.tf   (without default or without defining the value)
+variable "ami_value" {
+    description = "value for the ami"
+}
+
+variable "instance_type_value" {
+    description = "value for instance_type"
+}
+
+variable "subnet_id_value" {
+    description = "value for the subnet_id"
+}
+
+
+vi outputs.tf
+output "public-ip-address" {
+  value = aws_instance.example.public_ip
+}
+
+
+
+
+
+How to pass the value: each team needs to create their own main.tf outside the module directory
+cd ..
+
+vi main.tf   (you need to create your own main.tf file)
+module "ec2_instance" {
+  source = "./module/ec2_instance"
+  ami_value = "ami-053b0d53c279acc90" # replace this
+  instance_type_value = "t2.micro"
+  subnet_id_value = "subnet-019ea91ed9b5252e7". # replace this
+}
+
+
+
+
 
 
 
