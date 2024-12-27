@@ -1,0 +1,1669 @@
+Docker:
+
+
+IMP links: 
+
+Docker overview: 
+https://docs.docker.com/get-started/overview/
+https://www.docker.com/resources/what-container/
+
+50 linux commands: https://www.digitalocean.com/community/tutorials/linux-commands
+
+
+
+
+
+Install docker desktop on windows:- https://docs.docker.com/desktop/install/windows-install/
+
+Install Docker desktop for ubuntu: https://docs.docker.com/desktop/install/ubuntu/
+
+Install docker on aws ec2 instances: https://docs.docker.com/engine/install/
+yum install docker -y
+systemctl start docker
+systemctl enable docker
+
+
+Once docker is installed, search docker desktop -> click on docker desktop
+
+Open powershell /command prompt / GitBash / terminal and run docker
+
+
+—-----------Docker VS VM
+
+
+
+—-------------MicroService vs Monolithic Architecture
+
+
+
+
+
+=====================Docker
+
+What is Docker: Docker is a tool. Docker is an open platform for developing, shipping, and running applications. Docker enables you to separate your applications from your infrastructure so you can deliver software quickly. With Docker, you can manage your infrastructure in the same ways you manage your applications. By taking advantage of Docker's methodologies for shipping, testing, and deploying code, you can significantly reduce the delay between writing code and running it in production.
+
+
+
+
+What is Docker image?
+Docker image is nothing but a combination of multiple layers and each layer contains an instruction. 
+An image is a read-only template with instructions for creating a Docker container. 
+You might create your own images (custom application docker image)or you might only use those created by others and published in a registry. To build your own image, you create a Dockerfile with a simple syntax for defining the steps needed to create the image and run it. Each instruction in a Dockerfile creates a layer in the image. When you change the Dockerfile and rebuild the image, only those layers which have changed are rebuilt. This is part of what makes images so lightweight, small, and fast, when compared to other virtualization technologies.
+
+
+
+What is a Docker container?
+Docker container is nothing but a runtime docker image. You can create a docker container from a docker image.
+
+docker run -itd <docker image> /bin/bash                                    —--> for non UI application
+docker run -itd -p <VM port>:<Image Port> <docker image>      —---> for UI based application
+
+(without /bin/bash)
+
+
+
+
+
+================Docker command
+
+Start -> Docker desktop -> open or run as admin
+
+Open powershell or cmd or terminal or gitbash
+
+docker --version
+
+
+Download or pull the image from DockerHub/Docker Registry/AWS ECR
+docker pull <name of the image>
+ex: docker pull python:3.8.18
+
+Where 3.8.18 is tag
+
+
+ex: docker pull tomcat
+docker pull httpd  or docker pull httpd:latest
+
+(if there is no tag, then docker pulls the latest image )
+
+
+Dockerhub is a online public docker repository or registry that contains docker images
+https://www.docker.com
+
+
+
+How to list local docker images:
+docker images
+
+
+Create container (UI) from docker images
+
+docker run -i -t -p <VM port>:<docker image port> <image name or ID>
+Or
+
+docker run -it -p <VM port>:<docker image port> <image name or image ID>
+
+
+
+ex: docker run -it -p 1000:80 httpd:latest
+
+Or
+docker run -it -p 1000:80 d456j748          (provide your docker image ID)
+
+Or
+docker run -it -p 1000:80 --name mycontainer httpd:latest
+
+
+How to access the container based App
+http://<VM IP>:<VM port>   
+
+Or
+http://localhost:<VM port>           —--> from local laptop
+
+Ex: http://localhost:1000
+
+Where: 
+-i    -> interactive mode (you can login to container’s terminal )
+-t   -> container terminal / container shell
+-p  -> port mapping/port forwarding  (VM port should be unique)
+
+
+Assignment: 
+Create jenkins container (jenkins/jenkins)
+docker run -it --name jenkinsWithouttag -p 10001:8080 jenkins/jenkins
+
+How to access Jenkins dashboard: 
+http://localhost:10001
+
+
+Create nginx container
+Create tomcat container
+
+
+==============port mapping/port forwarding
+
+Problem statement: container application can not  access outside directly (over the internet)
+There is no presence of docker containers outside the dockerVM.
+
+If you want to access docker container application from outside then you need to do port mapping /port forwarding
+
+docker run -it -p <VM port>:<Container Port or App port>  <image>
+
+
+** VM Port should be unique 
+
+Ex: 
+docker run -it 10000:8080 jenkins/jenkins
+docker run -it 10001:8080 tomcat
+docker run -it 10002:8080 quay.io/wildfly/wildfly:latest
+
+
+
+
+========Assignment: How to check used ports in Linux/VM ?
+
+
+============container creation mode
+There are 2 type of mode
+1. detached mode or background: with "-d"
+
+***you will not get the container's terminal, the container will be in the running state.
+container runs all the processes in background
+
+
+ex: (for infra) docker run -i -t -d --name <cont name> <image name> /bin/bash
+ex: (for UI)	docker run -i -t -d -p <VM port>:<app port> --name <cont name> <image name>
+
+
+
+create UI container in detached mode:
+ 
+how to create apache container (App port 80 )
+docker run -itd -p 20003:80 --name c8 httpd:latest
+how to access: http://localhost:20003
+
+
+how to create jenkins container (App port 8080 )
+docker run -itd -p 20004:8080 --name c9 bitnami/jenkins:latest
+how to access: http://localhost:20004
+
+
+docker ps
+
+
+
+
+
+2. foreground mode: without "-d"
+*** once you create container in foreground mode, you will get container "terminal" , once you exit
+from the container's terminal (press c), it kills the container processes as well as it stops the container.
+
+use case: dugging, testing, poc,  dev env, qa env but in not in Prod
+
+ex: (for infra )docker run -i -t --name <cont name> <image name> /bin/bash
+ex: (for UI)	docker run -i -t -p <VM port>:<app port> --name <cont name> <image name>
+
+
+
+
+infra container: script execution, process file or data, backend operation etc
+with /bin/bash
+image ex: ubuntu, alpine, debian
+
+ex: docker run -it --name c10 ubuntu:latest /bin/bash
+or docker run -itd --name c10 ubuntu:latest /bin/bash
+
+
+
+ui container: app deployment, dashboard
+without /bin/bash  & port mapping(port forwarding): -p <VM port>:<app port>
+
+ex: docker run -it -p 20000:8080 --name c5 tomcat:latest
+
+how to access: http://localhost:20000
+
+
+
+***VM port should be unique, it should not assign to any other processes or container
+*** container name should be unique
+***container cant be access directly, container presence is within the docker host VM
+
+
+how to run another container(jenkins) where app port is 8080
+docker run -it -p 20001:8080 --name c6 jenkins:latest
+how to access: http://localhost:20001
+
+
+how to create apache container (App port 80 )
+docker run -it -p 20002:80 --name c7 httpd:latest
+how to access: http://localhost:20002
+
+
+Benefits of background mode:
+Above command creates the container in the background, the container’s processes will run in the background even after you exit.
+
+docker run  —> create and start the container
+
+
+===========How to access/login container’s terminal or container’s shell
+why: if you want to check the processes, logs, troubleshooting activity
+
+docker exec -it <container name or container ID> /bin/bash
+
+
+**We are accessing the container’ terminal in bash shell
+
+
+**container should be in the running state
+
+How to check if the container is running or not??
+docker ps   —->list only running container(if you are getting output it means container is running)
+
+docker ps -a   —-> running + stopped container
+
+How to identify if container is not running
+ans : Exited
+
+
+
+Can we access the terminal/shell of the EXITED container?
+Ans: no, we can not . first you should start the container
+
+docker start <container ID>     —-> you can start a EXITED container
+docker restart <Container Id>   —> restart a container
+docker stop <Container Id>      —> stop a running container
+
+
+
+
+Once you are logged in to container’s terminal, you can check application logs, you can work on troubleshooting activity etc
+**docker command will not work inside container’s terminal
+**first you need to go exit from container’s terminal and go back to VM’s terminal
+
+
+
+=============Docker Architecture
+https://www.aquasec.com/cloud-native-academy/docker-container/docker-architecture/
+The Docker Engine
+
+There are 3 main components in docker architecture. 
+First, let us take a look at Docker Engine and its components so we have a basic idea of how the system works. Docker Engine allows you to develop, assemble, ship, and run applications using the following components:
+
+Docker CLI: A command line interface client for interacting with the Docker daemon. As a user we connect to docker CLI only and you can execute the docker commands.
+Docker CLI passes user command to REST API
+It greatly simplifies how you manage container instances and is one of the key reasons why developers love using Docker.
+
+Docker Engine REST API: An API used by applications to interact with the Docker daemon; it can be accessed by an HTTP client. It receives instruction from CLI and passes instruction to Docker Daemon or Docker D and vice versa
+
+Docker Daemon: A persistent background process that manages Docker images, containers, networks, and storage volumes. The Docker daemon constantly listens for Docker API requests and processes them.
+
+
+
+=============How to delete containers and images
+
+Delete container:- 
+
+docker rm <container ID or name>
+
+**container should be in the stopped status
+
+Stop the container then delete
+docker stop <container Id>
+docker rm <container Id>
+
+Delete running forcefully: (not recommended)
+docker rm <container ID> --force
+
+
+Delete docker image:
+docker rmi <image ID or name>
+
+** image should not be attached to any container. Image should be free
+
+**if image is used by one of the container then first delete the container (if not required) then delete docker image
+
+Delete docker image forceful: (not recommended)
+docker rmi <image id or name> --force
+
+
+
+Docker kill:-
+docker kill allows immediate termination (delete) , it doesn’t check the background docker process/application processes. Kill also deletes the running container.
+
+docker kill <container ID>
+
+**similar to docker rm --force
+
+Q. Difference between docker kill and docker rm?
+
+kill-> stop main process in running container abruptly and delete.
+rm -> delete a stopped container
+
+
+====>
+Q. Diff between -p and -P ?
+Q. Can we copy a file from Host to container or vice versa??
+Q. Can we rename an existing container?
+Q. Can we create an image from a container?
+
+
+Q. Can we create an archive file (tar) from an image?
+or
+Q. How to copy an image from one system to another system without using Docker Registry?
+or
+Q. Can we send an image via email???
+Ans: 
+docker images
+docker save -o ./abc.tar bitnami/jenkins:latest
+
+
+*** -o: output
+***abc.tar file will be created in the current directory
+
+
+
+
+
+Q. Can we pause a container?
+docker pause <c.id>
+
+***this command will pause all the processes of the container.
+
+
+Q. Can we hibernate a docker container?
+ans: no, there is no direct command
+
+
+Q. Can we hibernate a process (particular) in a container?
+ans: no, you can't directly hibernate processes in containers.
+
+what you can do-> just go inside the container's terminal then hibernate a particular process
+https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate
+
+
+
+
+
+
+
+
+
+
+
+====> Can we create docker image from a container (docker commit)
+
+
+
+docker run -itd -p 1005:80 httpd
+
+Docker exec -it <container ID> /bin/bash
+
+cd htdocs
+ls
+vi index.html     —--> you will get error (cas vi package is not present)
+
+apt-get update -y    —-> update container
+apt-get install vim -y     —--> install vim or vi package in a container
+
+vi index.html   —> now you can modify content and save
+
+
+Now you can see the changes on the browser…
+
+
+You can exit from the container. Then new image from container
+
+Syntax: docker commit <container ID> <new image name>
+
+
+Ex: 
+
+
+
+
+
+
+
+
+
+=================Troubleshooting commands
+
+How to describe logs of a container (running / stopped) -> 
+you can check why the container is not running (script/misconfiguration, package missing, missing env variable)
+container is running but application is not running (war/jar/ear/dotnet dll/python package/nodejs or npm package.json /executable path )
+
+docker logs <container ID>
+
+
+You can describe container/image/network/volume details:
+docker inspect <container ID/Image ID/Volume/network>
+
+
+
+Resources crunches issue:- docker host (Docker VM) assigns cpu/memory/disk space to a container 
+Or
+How to check CPU/memory usage of a container
+
+docker stats 
+
+
+
+Assignment: create a container (nginx -> web application similar to apache) and assign fixed cpu and memory (reserve CPU and memory-> static resource allocation)
+https://docs.docker.com/config/containers/resource_constraints/
+
+
+** docker host allocate cpu/memory/disk dynamically to the containers
+
+
+
+Display the running processes of a running container
+
+docker top <container ID>
+
+
+Container and application both are running but application is stuck
+Check for zombie process then kill or check the process by login to container
+
+
+=========Docker container registry 
+DockerHub-> publicly available container registry -> to store docker image
+
+** do not use DockerHub in Prod env
+
+
+
+Create DockerHub account
+
+https://hub.docker.com/ 
+
+
+
+
+Open powershell/cmd/git bash
+
+docker login               —--> by default it points to dockerhub , then provide docker hub credentials
+
+
+Now we can create a tag to push docker image
+(image name should start with docker registry ID)
+
+docker tag <current image name >:<current tag>  <docker registry ID>/<image name>:<tag>
+
+docker tag nginx:1.14.2  pkw0301/nginx:1.14.2
+
+**or  
+docker tag nginx:1.14.2  pkw0301/devops-nginx:latest
+
+
+**you can create tag with any new image name
+
+docker image    —-> you can see new image with pkw0301/nginx:1.14.2 name locally
+
+**this command doesn’t create new image
+
+
+
+Once you assign tag, we can push docker image from local laptop to docker registry (DockerHub)
+
+docker push <registry id/ docker image name>:<tag>
+docker push pkw0301/devops-nginx:latest
+
+
+ 
+
+
+==========You also can upload docker images to AWS ECR:
+(during interview you can explain that your org is using only AWS ECR to store the docker image)
+
+AWS ECR (Elastic container Registry) -> a docker registry managed by AWS, you can keep the registry public or private. You also can manage the permission (who can list docker image, who can create image registry, who can delete docker image or registry, who can push the image)
+**AWS ECR is similar to DockerHub
+
+
+Create an IAM user -> assign ECR permission (policy)
+You can login as IAM user
+
+AWS console -> ECR -> give a name to registry -> disable immutability (it allows to override the tag) -> enable scan on push
+** AWS ECR will scan the docker image, and provides vulnerability information/provide image information such as harmful script or virus /report in in docker image
+
+
+Lab:
+
+If you want to work with powershell only then
+
+
+
+Download aws tool for powershell (if your os is windows)
+Open powershell as admin -> Install-Module -Name AWS.Tools.Common 
+
+
+
+Download aws cli: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+
+Open powershell and type “aws configure”
+Provide access key and secret key and region code (eu-central-1)
+
+Follow the link and login to ECR from AWS CLI: https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html
+
+Syntax:
+
+aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
+
+
+Just update region code and aws_account_id
+
+Ex:
+
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 040872219986.dkr.ecr.eu-central-1.amazonaws.com
+
+
+
+
+
+
+
+
+If you want to work with gitbash then check macos/linux docker push command
+
+
+
+
+Open git bash, type aws configure then provide access key, secret key and region id
+Then type docker login (macOS/Linux)
+
+
+
+
+
+Now you can tag local image
+
+Syntax:
+
+docker tag <current docker image name>:<tag> 
+<aws id>.dkr.ecr.<region id>.amazonaws.com/<ecr registry>:<tag>
+
+
+
+
+Ex: 
+
+docker tag python:3.8.18 040872219986.dkr.ecr.eu-central-1.amazonaws.com/-rethansegistry:latest
+
+
+
+Then type docker images   —--> you will be able to see this new image with ECR tag
+
+
+
+Then docker push:
+docker push 040872219986.dkr.ecr.eu-central-1.amazonaws.com/ethans-registry:latest
+
+
+
+Now you can login to AWS console-> ECR-> 
+
+
+
+
+
+Delete AWS ECR after your lab.
+
+
+============Dockerfile
+
+
+
+Dockerfile contains Application related instructions, based on Dockerfile instructions, you can create docker image
+
+Dockerfile best practices: 
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+https://docs.docker.com/develop/develop-images/instructions/
+
+Use Official image only.
+You can go ahead with the alpine base image .
+Why alpine images? 
+Alpine images are lightweight images (size would be in MB), because they contain only the required binary/library file. It doesn’t unnecessary files/data
+Ex: python.3.11.6-apline3.18
+
+
+While full fledged docker images contains some extra packages/binary & library file python3.12  thats why the size of full fledge docker image would be higher than alpine. 
+
+
+
+
+2. Dockerfile is a text file without any extension
+3. There is no space between Docker and file, 
+
+
+
+
+==========Docker file instructions: 
+
+
+
+1: FROM -> Dockerfile always starts with FROM instructions. you can define base image along with tag
+
+vi Dockerfile
+FROM python:3.11.6-alpine3.17
+
+
+
+
+
+
+We can create custom docker image from Dockerfile using docker build command
+Syntax: 
+
+docker build -t <image name>:<tag> .
+Or
+docker build -t <registryID /  image name>:<tag> .
+
+
+Where:
+registryID -> DockerHub/AWS ECR registry ID
+.  -> docker will Dockerfile in the current directory or Create image from Dockerfile in the current directory
+-t : tag
+
+docker build -t pkw0301/mypython:3.11 .
+
+or
+docker build -t 040872219986.dkr.ecr.eu-central-1.amazonaws.com/mypthon:3.11 .
+
+**so that you don’t need to run docker tag command again and again
+
+
+
+
+
+
+2. LABEL -> this is the second instruction of Dockerfile. It allows us to describe the image, you can author name, env name etc. you can define LABEL in key and value. (Its optional)
+
+vi Dockerfile
+
+FROM python:3.11.6-alpine3.17
+LABEL author=prakash
+LABEL appname=python
+LABEL env=dev
+LABEL key=value
+
+
+docker build -t pkw0301/mypython:3.11 .
+docker images
+
+
+
+Ex: https://hasura.io/blog/how-to-write-dockerfiles-for-python-web-apps-6d173842ae1d/
+
+
+RUN -> it allows us to install packages/dependencies  or execute any command during image creation.
+(apt-get module is a package manager for Ubuntu OS distributions. Apt-get is similar to yum)
+
+
+FROM ubuntu:20.04
+LABEL author=prakash
+RUN apt-get update -y             #layer3
+RUN apt-get install git -y          #layer4-> it also create a reference ID, 
+
+
+Reference Id stores layer information , unnecessary it increases the size of docker image
+
+** but as per the best practices we should create lightweight docker images
+
+**Each instruction creates a layer, and as per docker best practices we should minimize the number of layers, because each layer increases the size of the docker image.
+
+FROM ubuntu:20.04
+LABEL author=prakash
+RUN apt-get update -y ; \
+         apt-get install git -y
+
+Or
+{\ -> next line and run command }
+
+FROM ubuntu:20.04
+LABEL author=prakash
+RUN apt-get update -y && apt-get install git -y
+
+
+
+docker build -t pkw0301/myubuntu:20.04 .
+
+Syntax: 
+docker run -itd <docker image> /bin/bash                                —--> for non UI application
+
+ex:
+docker run -itd pkw0301/myubuntu:20.04 /bin/bash
+
+Now you can go inside the container and verify (use powershell)
+
+
+
+
+
+
+Ex2: dockerfile for python code
+
+
+vi Dockerfile
+
+FROM python:latest               
+#https://hub.docker.com/_/python/tags
+LABEL author=prakash
+RUN apt-get update -y ; \
+         apt-get install pip -y ; \
+         apt-get install wget -y ; \
+         apt-get install curl -y
+
+
+
+
+**alpine images support apt-get module
+**python base image is build upon 
+https://github.com/docker-library/python
+
+
+
+
+
+Ref dockerfile:
+Sonar: https://github.com/docker-library/python/blob/master/3.12/alpine3.18/Dockerfile
+https://github.com/adoptium/containers/blob/main/20/jre/alpine/Dockerfile.releases.full
+Openjdk: https://github.com/docker-library/openjdk/blob/master/Dockerfile-linux.template
+
+
+
+WORKDIR: to set a working directory in docker image. Once you logged into the current it points to WORKDIR (home directory).
+
+vi Dockerfile
+
+FROM ubuntu:20.04
+LABEL author=prakash
+RUN apt-get update -y ; \
+        apt-get install git -y ; \
+        mkdir /app
+WORKDIR /app
+
+
+
+docker build -t pkw0301/myubuntu:20.04 .
+docker run -itd pkw0301/myubuntu:20.04 /bin/bash
+docker ps
+docker exec -it <container id> /bin/bash
+
+
+
+
+
+COPY :  copy files from local VM (Docker host VM) to Image during creation.
+
+** COPY doesn’t support remote VM or 
+** You can copy specific file or all the files (.) or based on pattern (*.html)
+
+
+vi Dockerfile
+
+FROM ubuntu:20.04
+LABEL author=prakash
+LABEL team=engineering
+LABEL AppName=Platform
+LABEL Email=abc.@ethans.com
+
+RUN apt-get update -y ; \
+        apt-get install git -y ; \
+        mkdir /app
+WORKDIR /app
+COPY index.html .
+
+
+
+**index.html from current directory where you have Dockerfile -> source
+** . (dot) is destination, . (dot) will point to WORKDIR (/app) directory in image
+
+Or
+
+vi Dockerfile
+
+FROM ubuntu:20.04
+LABEL author=prakash
+RUN apt-get update -y && apt-get install git -y ; \
+        mkdir /app
+WORKDIR /app
+COPY index.html /app
+
+
+** COPY <source location> <destination>
+Where:
+ source is local VM
+Destination is docker image
+
+
+
+
+Now you can build the image
+
+docker build -t pkw0301/myubuntu1:20.04 .
+
+
+
+==Assignment: create a Dockerfile for apache and copy index.html
+
+vi Dockerfile
+
+FROM ubuntu
+LABEL author=prakash
+RUN apt-get update -y ; \
+         apt-get install apache2 -y
+WORKDIR /var/www/html/
+COPY index.html .
+
+
+
+
+** create container without /bin/bash
+** don’t add “/bin/bash” flag for UI container
+
+OR
+
+FROM httpd
+LABEL author=prakash
+RUN apt-get update -y
+COPY index.html /usr/local/apache2/htdocs/
+
+
+
+https://github.com/docker-library/httpd/blob/master/2.4/Dockerfile
+https://ubiq.co/tech-blog/how-to-change-default-index-page-in-apache/
+
+
+
+===
+Create a bucket-> enable ACL control->make it public (disable block access) -> 
+upload an index.html -> permission of the index.html -> make everyone public read access
+
+
+
+
+
+ADD: ADD is similar to COPY, you can copy files from local VM, and remote URL
+
+vi Dockerfile (from local VM)
+
+FROM httpd
+LABEL author=prakash
+RUN apt-get update -y
+ADD index.html /usr/local/apache2/htdocs/
+
+
+vi Dockerfile (download from a URL)
+
+FROM httpd
+LABEL author=prakash
+RUN apt-get update -y
+ADD https://gist.github.com/lillylangtree/b55828fa05ed3470d352/index.html /usr/local/apache2/htdocs/
+
+vi Dockerfile (download data from aws s3 bucket)
+
+FROM httpd
+LABEL author=prakash
+RUN apt-get update -y
+ADD https://ethans-devops-prakash.s3.eu-central-1.amazonaws.com/index.html /usr/local/apache2/htdocs/
+
+
+
+=======docker prune    → it deletes unused resources from docker
+
+docker container prune        (delete all the exited container)
+docker image prune             (delete all the unused)
+
+
+
+
+Q. What do you understand by dangling images ?
+Unused images are nothing dangling images, <none> tag
+
+
+Q. How to delete an image based on pattern?
+Or
+Q. How to delete images with <none> tag
+
+docker rmi $(docker images -f “dangling=true” -q)
+
+https://forums.docker.com/t/how-to-remove-none-images-after-building/7050/9
+
+
+—--------Alternative of ADD instruction
+
+Docker recommends to use “RUN wget” instead of ADD (download from URL)
+
+Why?  
+Because it copies the package in layer, now the package would be the part of the layer, unnecessary it increases the size of the image.
+ADD also downloads binary files from internet, it
+
+
+vi Dockerfile (download data from aws s3 bucket)
+
+FROM httpd
+LABEL author=prakash
+RUN apt-get update -y ; \
+         apt-get install wget -y
+WORKDIR /usr/local/apache2/htdocs/
+RUN rm -rf index.html
+RUN wget https://ethans-devops-prakash.s3.eu-central-1.amazonaws.com/index.html
+
+
+
+docker build -t pkw0301/mycustomimage:01 .
+docker run -itd -p 12070:80 pkw0301/mycustomimage:01
+docker ps
+docker exec -it <container ID>  /bin/bash
+
+
+**base image is httpd so you don’t need to start services manually
+apt-get install vim -y      
+
+** to install vim or vi package
+
+***now you can verify
+vi index.html
+
+
+*** if everything is okay then you can access from browser:- 
+http://localhost:12070
+
+Or
+http://<public IP of ec2>:12070
+
+
+=========vi Dockerfile  (ubuntu as base image)
+
+FROM ubuntu
+LABEL author=prakash
+RUN apt-get update -y ; \
+	apt-get install apache2 -y ; \
+	apt-get install wget -y
+WORKDIR /var/www/html/
+RUN rm -rf index.html
+RUN wget https://ethans-devops-prakash.s3.eu-central-1.amazonaws.com/index.html
+
+
+
+**** if the base image is ubuntu then we need to start the services manually, we can avoid this activity by adding CMD instructions
+
+
+
+
+
+
+
+======EXPOSE : you can define application port number in docker image
+
+=======CMD : CMD comes in picture during container creation (not during image creation)
+It allows us to run any command (you can pass any linux command/script)
+ex: to start/restart services, run any script
+
+
+
+Q. Difference between CMD and RUN ?
+CMD and RUN both are similar, CMD executes instruction during container creation while RUN executes instructions during image creation.
+
+
+*** Docker instruction during image creation
+-> FROM, LABEL, RUN, EXOSE, ADD , ENV, USER, GROUP,ARG
+
+
+**Docker instruction during container creation
+->, CMD and ENTRYPOINT
+
+
+
+
+Dockerfile for tomcat
+
+FROM ubuntu
+LABEL author=prakash
+WORKDIR /opt
+EXPOSE 8080
+RUN apt-get update -y ; \
+	apt-get install wget -y ; \
+	apt-get install gzip -y ; \
+    apt-get install openjdk-11-jdk -y ; \
+	wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.82/bin/apache-tomcat-9.0.82.tar.gz ; \
+	tar -xvzf /opt/apache-tomcat-9.0.82.tar.gz ; \
+    rm -rf apache-tomcat-9.0.82.tar.gz ; \
+    wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /opt/apache-tomcat-9.0.82/webapps/sample.war
+CMD ["/opt/apache-tomcat-9.0.82/bin/catalina.sh" , "run"]
+
+
+
+docker build -t pkw0301/mytomcat:02 .
+docker run -itd -p 12075:8080 pkw0301/mytomcat:02
+
+
+Assignment:
+Q. What do you understand by catalina.sh?
+
+
+
+*** we need extract the tar file 
+tar -xvzf apache-tomcat-9.0.82.tar.gz
+
+Where 
+x-> extract
+v-> verbose
+f -> file
+z->zip
+
+
+
+
+
+
+==========ENTRYPOINT
+ENTRYPOINT -> similar to CMD , 
+ENTRYPOINTS executes command/script during container creation.
+
+If ENTRYPOINT and CMD both are there in Dockerfile then docker executes ENTRYPOINT instructions then CMD
+
+CMD: Sets default parameters that can be overridden from the Docker command line interface (CLI) while running a docker container.
+ENTRYPOINT: Sets default parameters that cannot be overridden while executing Docker containers with CLI parameters.
+
+vi Dockerfile
+FROM ubuntu
+CMD ["echo", "Hello World"]          
+
+CMD instruction can be overridden during container creation
+docker run <image name> echo "message changed"
+
+https://www.cloudbees.com/blog/understanding-dockers-cmd-and-entrypoint-instructions
+https://devtron.ai/blog/cmd-and-entrypoint-differences/
+
+
+
+FROM ubuntu
+LABEL author=prakash
+WORKDIR /opt
+EXPOSE 8080
+RUN apt-get update -y ; \
+	apt-get install wget -y ; \
+	apt-get install gzip -y ; \
+    apt-get install openjdk-11-jdk -y ; \
+	wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.82/bin/apache-tomcat-9.0.82.tar.gz ; \
+	tar -xvzf /opt/apache-tomcat-9.0.82.tar.gz ; \
+    rm -rf apache-tomcat-9.0.82.tar.gz ; \
+    wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /opt/apache-tomcat-9.0.82/webapps/sample.war
+ENTRYPOINT ["/opt/apache-tomcat-9.0.82/bin/catalina.sh" , "run"]
+
+
+=============ENV -> you can provide environment variable
+Docker execute ENV instruction during image creation 
+
+https://docs.docker.com/engine/reference/builder/
+https://www.baeldung.com/ops/dockerfile-env-variable
+
+
+ENV key=value                            (key= name of the key, value = actual value)
+CMD $key                                   ($key = this is how we can call ENV)
+
+or
+ENV key=value
+CMD ${key}
+
+Why ENV?
+you can use variable concept, so that same Dockerfile can be used other team, now only value needs to be modified
+
+
+vi Dockerfile
+
+FROM ubuntu
+LABEL author=prakash
+WORKDIR /opt
+ENV PORT=8080
+ENV JDKPKG=openjdk-11-jdk
+EXPOSE $PORT
+RUN apt-get update -y ; \
+	apt-get install wget -y ; \
+	apt-get install gzip -y ; \
+    apt-get install $JDKPKG -y ; \
+	wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.82/bin/apache-tomcat-9.0.82.tar.gz ; \
+	tar -xvzf /opt/apache-tomcat-9.0.82.tar.gz ; \
+    rm -rf apache-tomcat-9.0.82.tar.gz ; \
+    wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /opt/apache-tomcat-9.0.82/webapps/sample.war
+ENTRYPOINT ["/opt/apache-tomcat-9.0.82/bin/catalina.sh" , "run"]
+
+
+Assignment: set ENV for tomcat version
+
+
+
+
+=========ARG argument ->  you can  pass variables during docker build command. So no need to hardcore the values in dockerfile
+
+FROM ubuntu
+LABEL author=prakash
+WORKDIR /opt
+ENV PORT=8080
+ARG JDKPKG
+EXPOSE $PORT
+RUN apt-get update -y ; \
+	apt-get install wget -y ; \
+	apt-get install gzip -y ; \
+    apt-get install $JDKPKG -y ; \
+	wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.82/bin/apache-tomcat-9.0.82.tar.gz ; \
+	tar -xvzf /opt/apache-tomcat-9.0.82.tar.gz ; \
+    rm -rf apache-tomcat-9.0.82.tar.gz ; \
+    wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /opt/apache-tomcat-9.0.82/webapps/sample.war
+ENTRYPOINT ["/opt/apache-tomcat-9.0.82/bin/catalina.sh" , "run"]
+
+
+
+in the above Dockerfile JDK version is not specified. now ARG instruction allows to pass the actual value during
+docker build command you can use --build-arg <varname>=<value> flag
+
+
+docker build -t --build-arg JDKPKG=openjdk-11-jdk myimage:01 .
+
+
+What is the benefit of ARG ?
+It allows the dev team to pass respective or required versions. same Dockerfile can be used many development team
+
+now dev team1 can use openjdk11
+docker build -t pkw0301/mytomcat:01 --build-arg JDKPKG=openjdk-11-jdk .
+
+
+
+now dev team2 can use openjdk17
+docker build -t pkw0301/mytomcat:02  --build-arg JDKPKG=openjdk-17-jdk .
+
+
+
+docker run -itd -p 12131:8080 pkw0301/mytomcat:01
+docker ps
+docker exec -it <container ID> /bin/bash
+java -version
+
+
+It should point jdk11
+
+
+Similarly you can create one more container  (pkw0301/mytomcat:02)
+
+docker run -itd -p 12132:8080 pkw0301/mytomcat:02 
+docker ps
+docker exec -it <container ID> /bin/bash
+java -version
+
+
+It should point jdk17
+
+
+**ENV -> you can pass variable in Dockerfile
+**ARG - > you can pass variable during image creation
+
+**you can not login to image
+
+
+==========USER and GROUP 
+
+FROM ubuntu
+LABEL author=prakash
+WORKDIR /opt
+ENV PORT=8080
+ENV JDKPKG=openjdk-11-jdk
+ENV TOMCATV=9.0.82
+ENV TOMCATPATH=apache-tomcat-9.0.82
+ARG TOMCATP
+EXPOSE $PORT
+RUN apt-get update -y ; \
+    apt-get install wget -y ; \
+    apt-get install gzip -y ; \
+	apt-get install $JDKPKG -y ; \
+    wget https://dlcdn.apache.org/tomcat/tomcat-9/v$TOMCATV/bin/apache-tomcat-$TOMCATV.tar.gz ; \
+    tar -xvzf /opt/apache-tomcat-$TOMCATV.tar.gz ; \
+	rm -rf apache-tomcat-$TOMCATV.tar.gz ; \
+	wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /opt/${TOMCATPATH}/webapps/sample.war
+CMD ["/opt/$TOMCATP/bin/catalina.sh" , "run"]
+
+
+
+docker build -t pkw0301/mytomcat:01 --build-arg TOMCATP=apache-tomcat-9.0.82 .
+
+Or
+
+FROM ubuntu
+LABEL author=prakash
+WORKDIR /opt
+ENV PORT=8080
+ENV JDKPKG=openjdk-11-jdk
+ENV TOMCATV=9.0.82
+ENV TOMCATPATH=apache-tomcat-9.0.82
+ENV TOMCATP=apache-tomcat-9.0.82
+EXPOSE $PORT
+RUN apt-get update -y ; \
+    apt-get install wget -y ; \
+    apt-get install gzip -y ; \
+	apt-get install $JDKPKG -y ; \
+    wget https://dlcdn.apache.org/tomcat/tomcat-9/v$TOMCATV/bin/apache-tomcat-$TOMCATV.tar.gz ; \
+    tar -xvzf /opt/apache-tomcat-$TOMCATV.tar.gz ; \
+	rm -rf apache-tomcat-$TOMCATV.tar.gz ; \
+	wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /opt/${TOMCATPATH}/webapps/sample.war
+CMD ["/opt/$TOMCATP/bin/catalina.sh" , "run"]
+
+docker build -t pkw0301/mytomcat:01 .
+
+(if ENV is there then no need to provide --build-arg during docker image build)
+
+
+=======Final Dockerfile
+
+FROM ubuntu
+LABEL author=prakash
+WORKDIR /opt
+ENV PORT=8080
+ENV JDKPKG=openjdk-11-jdk
+ENV TOMCATV=10.1.15
+ENV TOMCATURL=https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.15/bin/apache-tomcat-10.1.15.tar.gz
+EXPOSE $PORT
+RUN apt-get update -y ; \
+    apt-get install wget -y ; \
+    mkdir /opt/tomcat ; \
+    apt-get install gzip -y ; \
+	apt-get install $JDKPKG -y ; \
+    wget $TOMCATURL ; \
+    tar -xvzf /opt/apache-tomcat-$TOMCATV.tar.gz ; \
+	rm -rf apache-tomcat-$TOMCATV.tar.gz ; \
+    mv apache-tomcat-$TOMCATV/* /opt/tomcat/. ; \
+	wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /opt/tomcat/webapps/sample.war
+CMD ["/opt/tomcat/bin/catalina.sh" , "run"]
+
+
+
+
+docker build -t pkw0301/mytomcat:02 .
+docker run -itd -p 15679:8080 pkw0301/mytomcat:02
+docker exec -it 03231ce674b7 /bin/bash
+
+
+
+
+
+======Tomcat base image Dockerfile
+** it is recommended to use official base image of application
+
+vi Dockerfile
+
+
+FROM tomcat:10.1.15-jdk21
+LABEL author=prakash
+RUN apt-get update -y ; \
+       apt-get install wget -y ; \
+       wget https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war -O /usr/local/tomcat/webapps/sample.war
+
+
+Reference link: https://hub.docker.com/layers/library/tomcat/10.1.15-jdk21/images/sha256-8311c466153461be7b8c8c00418b8e201a28a57bf93298d1427952a8abc92710?context=explore
+
+** You don’t need to mentioned CMD, WORKDIR , EXPOSE and some other instructions in your Dockerfile
+Because most of the instruction already there in the official base image
+
+
+
+
+
+
+=======Docker file node 
+
+How to build or create image from Dockerfile
+vi Dockerfile
+
+
+#base image, based on your application python:3.9 or node:20 or tomcat:latest
+
+FROM nginx:latest        	 
+
+#LABEL supports key=value, author name, description, tags can be provided, docker creates layer for each instruction
+#you dont need to add all the instructions
+
+LABEL author=prakash
+LABEL app=staticpage
+
+
+
+
+docker build -t <image name> .    	(create image from Dockerfile in the current directory)
+
+or
+
+docker build -t DockerRegistryID/Image name:tag .  	(DockerHub)
+or
+docker build -t aws_account_id.dkr.ecr.us-west-2.amazonaws.com/image name:tag .	(AWS ECR)
+
+
+ex1: docker build -t myningx .
+
+ex2: docker build -t pkw0301/devopsjune:310824 .   	(DockerHub)
+
+ex3: docker build -t 123456789.dkr.ecr.us-west-2.amazonaws.com/devopsjune:310824 .
+
+docker images  	----> list the images locally
+
+
+
+----upload image to docker registry (docker hub)
+
+docker login	then provide your docker hub id and password
+
+syntax ->	docker push DockerRegistryID/Image name:tag
+
+ex: -> docker push pkw0301/devopsjune:310824
+
+
+
+
+
+
+======#base image, based on your application python:3.9 or node:20 or tomcat:latest
+
+FROM nginx:latest        	 
+
+#LABEL supports key=value, author name, description, tags can be provided
+# docker creates layer for each instruction
+#you dont need to add all the instructions
+
+LABEL author=prakash
+LABEL app=staticpage
+
+#Used to execute a command during the build process of the docker image.
+RUN apt-get update -y ;\
+	apt-get install wget -y && \
+	apt-get install git -y && \
+	mkdir /devops
+
+
+
+how to check: create a container from custom image
+
+docker run -it pkw0301/devopsjune:310824 /bin/bash
+git --version
+pwd
+ls          	----> you should be able to see devops folder
+
+
+-------EXPOSE
+vi Dockerfile
+
+#base image, based on your application python:3.9 or node:20 or tomcat:latest
+
+FROM nginx:latest        	 
+
+#LABEL supports key=value, author name, description, tags can be provided
+# docker creates layer for each instruction
+#you dont need to add all the instructions
+
+LABEL author=prakash
+LABEL app=staticpage
+
+#Used to execute a command during the build process of the docker image.
+RUN apt-get update -y ;\
+	apt-get install wget -y && \
+	apt-get install git -y && \
+	mkdir /devops
+
+
+#app port
+EXPOSE 80
+
+
+docker build -t pkw0301/devopsjune:310824 .
+
+docker run -itd -p 11000:80 pkw0301/devopsjune:310824
+
+browser: http://localhost:11000
+
+
+
+
+-------COPY
+#base image, based on your application python:3.9 or node:20 or tomcat:latest
+
+FROM nginx:latest        	 
+
+#LABEL supports key=value, author name, description, tags can be provided
+# docker creates layer for each instruction
+#you dont need to add all the instructions
+
+LABEL author=prakash
+LABEL app=staticpage
+
+#Used to execute a command during the build process of the docker image.
+RUN apt-get update -y ;\
+	apt-get install wget -y && \
+	apt-get install git -y && \
+	mkdir /devops
+
+
+#app port
+EXPOSE 80
+
+#copy file from local system to image, create a index.html locally in current directory
+COPY index.html /usr/share/nginx/html/
+
+
+docker build -t pkw0301/devopsjune:310824 .
+docker run -itd -p 11001:80 pkw0301/devopsjune:310824   
+(we can not use 11000 because , 11000 is already assigned to previously created container)    
+browser: http://localhost:11001
+
+
+===========RUN wget or ADD
+download or copy files from url or internet
+
+
+============ENV
+define variable and use it later on as variable
+
+
+
+----ENV for python Dockerfile
+ENV version=3.11.9
+
+FROM python$version
+
+
+
+======WORKDIR
+working directory, default directory after login
+
+
+
+========USER
+switch to user, by default docker executes all the commands as root user.
+ex: DB, any application
+
+
+=====CMD
+run any command or process or any script during container creation
+
+nginx
+CMD ["nginx", "-g", "daemon off;"]
+ -> destination-> /usr/share/nginx/html
+
+apache 
+CMD ["apachectl", "-D", "FOREGROUND"]
+-> destination-> /usr/local/apache2/htdocs/
+
+
+python
+CMD ["python", "./app.py", "./install.py"]  	---> ./app.py is your application python file
+
+tomcat
+CMD ["catalina.sh", "start", "0 0 0 0 0 ./catalina.sh"]
+-> destination-> /usr/local/tomcat/webapps/
+
+
+dotnet
+CMD ["dotnet", "app.dll"]	---> ask dev team for dll names
+
+node
+CMD ["node", "server.js"]  	----> server.js is your application file(check with dev team for file name)
+
+
+
+
+Q. Diff between RUN and CMD?
+ans:
+RUN-> any command or installaton or script during image creation.
+CMD -> run any command or process or any script during container creation
+
+
+
+
+====Sample Dockerfile
+https://github.com/prakashk0301/dockerfile-examples
+
+
+
+==========Python dockerfile
+https://hasura.io/blog/how-to-write-dockerfiles-for-python-web-apps-6d173842ae1d/
+
+
+=============Jenkins Docker Integrate (Docker Jenkins CI-CD)
+
+
+
+
+
+*** so the goal is copy artifacts in docker image, and push docker image to one of the container registry 
+*** change Jenkins instance type from t2 micro to t2 large or higher (vertical scaling)
+
+Install docker on jenkins (so that we can run docker commands on jenkins)
+yum update -y
+yum install docker -y
+service docker start
+systemctl enable docker
+
+
+
+Install docker plugin
+
+Docker API    
+Docker    
+Docker API    
+docker-build-step    
+Amazon ECR
+
+Create Jenkinsfile
+
+
+
+https://github.com/prakashk0301/maven-project/blob/master/Jenkinsfiledocker
+
+
+Create Dockerfile
+
+
+
+https://github.com/prakashk0301/maven-project/blob/master/Dockerfile
+
+Create Pipeline Job:
+
+
+
+
+
+
+If you are getting this error it means jenkins is not able to connect to the docker processes (docker.sock)
+{permission error}
+
+How to fix:
+chmod 777 /var/run/docker.sock
+
+
+
+
+
+
+** you should be able to see docker image on Jenkins
+
+
+We can push newly created docker image to one of the container registry (DockerHub or AWS ECR)
+
+Now we can add final stage:
+
+stage (‘docke-push’)
+
+
+Before you add final stage just add container registry credential in Jenkins (so that image can be uploaded from jenkins)
+
+
+Manage jenkins -> credential -> system -> global credentials -> add credential  (provide dockerhub credentials)
+
+
+
+
+Syntax generator and generate docker authentication and push command
+
+
+
+
+
+Add final stage:
+
+  stage ('docker push from jenkins to DockerHub')
+  {steps {  // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'DockerHubCredentials', url: 'https://index.docker.io/v1/') 
+{
+	// some block
+}    }}
+
+
+
+We can modify //some block
+
+  stage ('docker push from jenkins to DockerHub')
+  {steps { withDockerRegistry(credentialsId: 'DockerHubCredentials', url: 'https://index.docker.io/v1/') 
+     {
+	sh ‘docker push pkw0301/devops-oct23:latest’
+     }   
+ }}
+
+
+
+
+Run the pipeline, you would be able to see docker image on DockeHub
+
+Now anyone can pull and create container from this image
+
+
+docker run -itd -p 20000:8080 pkw0301/devops-oct23:latest
+
+http://<localhost or public ip>:200000/webapp
+
+
+Assignment:
+
+
+Define a variable in Jenkinsfile for docker image (try to variables docker image name)
+https://devops.stackexchange.com/questions/6126/how-to-define-variable-in-jenkins-declarative-pipeline
+https://linuxhint.com/define-variables-jenkinsfile/
+
+
+
+Create Jenkins Docker CICD pipeline with AWS ECR
+(create docker image on jenkins server and then upload to AWS ecr)z
+Install plugin, you also need to add access key and secret key
+AWS Secrets Manager Credentials Provider
+Amazon ECR plugin
+
+
+
+Python Jenkins pipeline: https://dev.to/sava_dev/jenkins-creating-a-pipeline-for-python-projects-4h6h
+
+
+Nodejs dockerfile: https://www.geeksforgeeks.org/how-to-create-a-dockerfile-in-node-js/
+https://nodejs.org/en/docs/guides/nodejs-docker-webapp
+
+
+Python Dockerfile: https://hasura.io/blog/how-to-write-dockerfiles-for-python-web-apps-6d173842ae1d/
+
+
+
+
+
+
+
